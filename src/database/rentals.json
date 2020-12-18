@@ -1,0 +1,31 @@
+[{
+    "id": 1,
+    "item": "Chair",
+    "borrowing_days": "9",
+    "vendor" : "Skys "
+}, 
+{
+    "id": 2,
+    "item": "Table",
+    "borrowing_days": "3",
+    "vendor" : "Skys "
+},
+{
+    "id": 3,
+    "item": "Decoration materials",
+    "borrowing_days": "2",
+    "vendor" : "Beautify "
+},
+{
+    "id": 4,
+    "item": "Speakers",
+    "borrowing_days": "9",
+    "vendor" : "McMerk "
+},
+{
+    "id": 5,
+    "item": "Chair Covers",
+    "borrowing_days": "9",
+    "vendor" : "Skys "
+}
+]

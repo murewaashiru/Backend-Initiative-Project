@@ -1,0 +1,31 @@
+[{
+    "id": 1,
+    "name": "Avengers: End game",
+    "description": "A team of super heroes try to restore the world after half its population was wiped off.",
+    "genre" : "Science Fiction"
+}, 
+{
+    "id": 2,
+    "name": "Mr & Mrs Smith",
+    "description": "A couple paired to kill each other",
+    "genre" : "Action"
+},
+{
+    "id": 3,
+    "name": "Black is King",
+    "description": "A musical movie compiled from songs from The Lion King Movie",
+    "genre" : "Motion Picture"
+},
+{
+    "id": 4,
+    "name": "Reign",
+    "description": "The life of Mary, Queen of Scot",
+    "genre" : "History"
+},
+{
+    "id": 5,
+    "name": "Enola Holmes",
+    "description": "Enola Holmes goes on a journey to find her missing mother",
+    "genre" : "Adventure"
+}
+]
