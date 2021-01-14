@@ -2,7 +2,7 @@ const express = require('express');
 const dotenv = require( 'dotenv');
 const bodyParser = require( 'body-parser');
 const morgan = require( 'morgan');
-// const routes = require( './routes');
+const mongoose = require('mongoose');
 const routes = require( './routes/index');
 dotenv.config();
 
@@ -11,7 +11,21 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// app.use('/api/movie', routes);
+mongoose
+  .connect(process.env.DATABASE_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex:true
+  })
+  .then(() => {
+    console.log('Successfully connected to MongoDB!');
+  })
+  .catch((err) => {
+    console.log('Unable to connect');
+    console.log(err);
+  });
+
 app.use('/api', routes);
 
 const PORT = process.env.PORT || 4000;

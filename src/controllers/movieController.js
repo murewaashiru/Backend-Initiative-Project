@@ -1,45 +1,34 @@
-let movieData = require('../database/movies.json');
+const Movies = require('../models/movies');
+const { successResponse, errorResponse } = require( '../utils/response');
 
 const createMovie = async (req, res, next) => {
   try {
-    let index = movieData.length;
-    const { name, description, genre} = req.body;
-    if (!name && !description && !genre) 
-      return res.send("You must supply for the following: 'name', 'description' and 'genre'");
+    const data = req.body;
 
-    var newMovie = {
-      "id": index + 1,
-      name,
-      description,
-      description,
-      genre      
-    }
-
-    movieData.push(newMovie);
-    res.status(200).json({message:"Movie created successfully", movieData});
+    const result = await Movies.create(data);    
+    return successResponse(res, 201, 'Account created successfully', result);
   } catch (err) {
     return next(err);
   }
 };
 
-const getMovies = (req, res, next) => {
-  try {
-    return res.status(200).json({message:"Movies retrieved successfully", movieData});
-  } catch (err) {
-    return next(err);
-  }
+const getMovies = async (req, res, next) => {
+  try{
+    const result = await Movies.find({});
+
+    return successResponse(res, 200, 'Movies retrieved successfully', result);
+  }catch(err){
+    console.log(err)
+    return next(err)
+}
 };
 
 const getMovieById = async (req, res, next) => {
   try {
     const {id}= req.params;
-    if (id > movieData.length || id <= 0) return res.status(404).send(`Movie with ID ${id} does not exist`);
+    const result = await Movies.findOne({_id:id});
 
-    for (var i = 0; i < movieData.length; i++) {
-      if(movieData[i].id == id){
-          return res.status(200).json({message:`Movie ${req.params.id} retrieved successfully`, movieData:movieData[i] });
-      }
-    }
+    return successResponse(res, 200, `Movie ${id} retrieved successfully`, result);
   } catch (err) {
     return next(err);
   }
@@ -48,22 +37,10 @@ const getMovieById = async (req, res, next) => {
 const updateMovie = async (req, res, next) => {
   try {
     const {id}= req.params;
-    const { name, description, genre} = req.body;
+    const data = req.body;
+    const result = await Movies.findByIdAndUpdate({_id:id}, data);
 
-    if (id > movieData.length || id <= 0) return res.status(404).send(`Movie with ID ${id} does not exist`);
-
-    if (!name || !description || !genre) 
-    return res.send("You must supply for the following: 'name', 'description' or 'genre'");
-
-    for (var i = 0; i < movieData.length; i++) {
-        if(movieData[i].id == id){
-          movieData[i].name = name;
-          movieData[i].description = description;
-            movieData[i].genre = genre;
-        }
-    }
-
-    return res.status(200).json({message:"Movie updated successfully", movieData});
+    return successResponse(res, 200, `Movie updated successfully`, result);
   } catch (err) {
     return next(err);
   }
@@ -72,14 +49,10 @@ const updateMovie = async (req, res, next) => {
 const deleteMovie = async (req, res, next) => {
   try {
     const {id}= req.params;
-    if (id > movieData.length || id <= 0) return res.status(404).send(`Movie with ID ${id} does not exist`);
+    const result = await Movies.findByIdAndDelete({_id:id});
+    if (!result) return errorResponse(res, 404, 'Movie does not exist or has been deleted'); 
 
-    for (var i = 0; i < movieData.length; i++) {
-      if(movieData[i].id == id){
-        movieData.splice(i, 1);
-        return res.status(200).json({message:"Movie deleted successfully", movieData});
-      }
-    }
+    return successResponse(res, 200, `Movie deleted successfully`);
   } catch (err) {
     return next(err);
   }

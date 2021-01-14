@@ -1,12 +1,18 @@
 # Backend-Initiative-Project
+
 This is a base repository for the backend initiative project
 
-## Level One Task: CRUD API WITH ARRAY
-Build a CRUD(Create, Read, Update, Delete) API(Application Programming Interface) with any  backend language of your choice.
-No database involved, just a server.
+## Pre-Requisites
 
-The endpoints will be for Users, Movies, Rentals.
+- MongoDB and database created
 
-Submission: Publish the APIs with Postman and share this too, do not forget to include the link to your level one task branch.
+## How to Install and run the application
 
-Reviews will be done on Saturdays.
+- Clone the application and run `yarn install`
+- Run `cp .env.example .env` to create the .env variables and fill them
+- Run `yarn run dev` to start development server
+
+## Technologies Used
+
+- NodeJS / Express
+- MongoDB

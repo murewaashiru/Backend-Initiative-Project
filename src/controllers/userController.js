@@ -1,29 +1,26 @@
-let userData = require('../database/users.json');
+const Users = require('../models/users');
+const { successResponse, errorResponse } = require( '../utils/response');
 
 const createUser = async (req, res, next) => {
-  let index = userData.length;
-  const { username, email, password} = req.body;
-  if (!username && !email && !password) 
-    return res.send("You must supply for the following: 'username', 'email' and 'password'");
-
   try {
-    var newUser = {
-      "id": index + 1,
-      username,
-      email,
-      password     
-    }
+    const data = req.body;
+    const {username, email }= req.body;
+    const user = await Users.findOne({username, email});
+    if (user) return errorResponse(res, 409, 'User already exists'); 
 
-  userData.push(newUser);
-  res.status(201).json({message:"User created successfully", userData});
+
+    const result = await Users.create(data);    
+    return successResponse(res, 201, 'Users created successfully', result);
   } catch (err) {
     return next(err);
   }
 };
 
-const getUser = (req, res, next) => {
+const getUser = async (req, res, next) => {
   try {
-    return res.status(200).json({message:"Users retrieved successfully", userData});
+    const result = await Users.find({});
+
+    return successResponse(res, 200, 'Users retrieved successfully', result);
   } catch (err) {
     return next(err);
   }
@@ -32,14 +29,9 @@ const getUser = (req, res, next) => {
 const getUserById = async (req, res, next) => {
   try {
     const {id}= req.params;
-    if (id > userData.length || id <= 0) return res.status(404).send(`User with ID ${id} does not exist`);
+    const result = await Users.findOne({_id:id});
 
-    for (var i = 0; i < userData.length; i++) {
-      if(userData[i].id == id){
-          return res.status(200).json({message:`User ${id} retrieved successfully`, userData:userData[i] })
-
-      }
-  }
+    return successResponse(res, 200, `Users ${id} retrieved successfully`, result);
   } catch (err) {
     return next(err);
   }
@@ -48,21 +40,16 @@ const getUserById = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
   try {
     const {id}= req.params;
-    const { username, email, password} = req.body;
-    if (id > userData.length || id <= 0) return res.status(404).send(`User with ID ${id} does not exist`);
-    
-    if (!username || !email || !password) 
-    return res.send("You must supply for the following: 'username', 'email' or 'password'");
+    const data = req.body;
+    const {username, email }= req.body;
 
-    for (var i = 0; i < userData.length; i++) {
-        if(userData[i].id == id){
-          userData[i].username = username;
-          userData[i].email = email;
-          userData[i].password = password;
-        }
-    }
+    // Check if the details already exist for another user
+    const user = await Users.findOne({username, email});
+    if (user && user._id != id) return errorResponse(res, 409, 'Email or username already taken'); 
 
-    return res.status(200).json({message:"User updated successfully", userData});
+    const result = await Users.findByIdAndUpdate({_id:id}, data);
+
+    return successResponse(res, 200, `User updated successfully`, result);
   } catch (err) {
     return next(err);
   }
@@ -71,14 +58,10 @@ const updateUser = async (req, res, next) => {
 const deleteUser = async (req, res, next) => {
   try {
     const {id}= req.params;
-    if (id > userData.length || id <= 0) return res.status(404).send(`User with ID ${id} does not exist`);
+    const result = await Users.findByIdAndDelete({_id:id});
+    if (!result) return errorResponse(res, 404, 'User does not exist or has been deleted'); 
 
-    for (var i = 0; i < userData.length; i++) {
-      if(userData[i].id == id){
-        userData.splice(i, 1);
-        return res.status(200).json({message:`User with ID ${id} deleted successfully`, userData});
-      }
-    }
+    return successResponse(res, 200, `User deleted successfully`);
   } catch (err) {
     return next(err);
   }
