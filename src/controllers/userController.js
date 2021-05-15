@@ -4,10 +4,9 @@ const { successResponse, errorResponse } = require( '../utils/response');
 const createUser = async (req, res, next) => {
   try {
     const data = req.body;
-    const {username, email }= req.body;
-    const user = await Users.findOne({username, email});
+    const {email }= req.body;
+    const user = await Users.findOne({email});
     if (user) return errorResponse(res, 409, 'User already exists'); 
-
 
     const result = await Users.create(data);    
     return successResponse(res, 201, 'Users created successfully', result);
